@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ms"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Carousel Harga Emas Jatuh</title>
+<style>
+*{box-sizing:border-box;margin:0}body{font-family:-apple-system,system-ui,sans-serif;background:#F4F8F8;color:#0E4B5A;padding:20px 16px 60px;max-width:640px;margin:auto}
+h1{font-size:24px;font-weight:800;text-align:center;margin-top:8px}p.s{text-align:center;color:#5E7680;margin:8px 0 20px;font-size:15px}
+#all{display:block;width:100%;background:#C2476A;color:#fff;border:0;border-radius:999px;font-size:21px;font-weight:800;padding:20px;box-shadow:0 6px 0 #F6D9DF}
+#all:disabled{opacity:.6}#st{text-align:center;margin:18px 0;font-weight:600;min-height:24px;line-height:1.4}
+.g{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}.g div{position:relative}.g img{width:100%;border-radius:12px;display:block}
+.g b{position:absolute;left:8px;top:8px;background:#0E4B5A;color:#fff;border-radius:999px;font-size:13px;padding:2px 9px}
+</style></head><body>
+<h1>Carousel Harga Emas Jatuh</h1>
+<p class="s">11 gambar siap. Tekan sekali, pilih "Save 11 Images".</p>
+<button id="all">Simpan Semua ke Photos</button>
+<div id="st"></div>
+<div class="g" id="g"></div>
+<script>
+var files=[];for(var i=1;i<=11;i++)files.push('Harga-Emas-Jatuh-'+String(i).padStart(2,'0')+'.png');
+var g=document.getElementById('g');files.forEach(function(f,i){var d=document.createElement('div');d.innerHTML='<img src="'+f+'" alt="Slide '+(i+1)+'"><b>'+(i+1)+'</b>';g.appendChild(d)});
+var st=document.getElementById('st'),btn=document.getElementById('all');
+var cache=null;
+async function load(){if(cache)return cache;cache=await Promise.all(files.map(async function(f){var r=await fetch(f);var b=await r.blob();return new File([b],f,{type:'image/png'})}));return cache}
+load().catch(function(){});
+btn.addEventListener('click',async function(){
+  btn.disabled=true;st.textContent='Menyediakan…';
+  try{
+    var fl=await load();
+    if(navigator.canShare&&navigator.canShare({files:fl})){await navigator.share({files:fl});st.textContent='Siap. Semak dalam Photos ✅'}
+    else{st.textContent='Telefon ni tak sokong simpan semua sekali gus. Tekan lama pada gambar dan pilih Save Image.'}
+  }catch(e){st.textContent=(e&&e.name==='AbortError')?'Dibatalkan. Tekan butang lagi bila sedia.':'Gagal: '+(e&&e.message?e.message:'cuba lagi')}
+  btn.disabled=false;
+});
+</script></body></html>
